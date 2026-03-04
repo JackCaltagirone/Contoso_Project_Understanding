@@ -284,3 +284,7 @@ SELECT
 FROM ranked_products
 WHERE rnk = 1
 ORDER BY cohort_bucket;
+
+
+
+SELECT * from pg_settings 

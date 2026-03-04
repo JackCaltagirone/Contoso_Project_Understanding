@@ -376,7 +376,8 @@ date_dim AS (
 )
 
 SELECT
-    dd.month AS month_number,
+    dd.month AS month_name,
+    EXTRACT(MONTH FROM TO_DATE(dd.month, 'Mon')) AS month_number,
     SUM(op.revenue) AS total_revenue,
     SUM(op.profit) AS total_profit,
     RANK() OVER (ORDER BY SUM(op.profit) DESC) AS profit_rank
@@ -388,7 +389,7 @@ JOIN customer_us cu
 JOIN date_dim dd
     ON op.orderdate = dd.date
 GROUP BY dd.month
-ORDER BY total_profit DESC;
+ORDER BY month_number;
 
 -- Build a month-by-year matrix of total profit for US Desktop sales.
 -- This output is heatmap-ready: rows = months, columns = years.
@@ -397,6 +398,7 @@ ORDER BY total_profit DESC;
 -- CTE 3: Restrict to US customers.
 -- CTE 4: Bring in year + month attributes.
 -- Final: Pivot into a month × year matrix.
+
 
 WITH order_profit AS (
     SELECT
@@ -431,7 +433,8 @@ date_dim AS (
         d.date,
         d.year,
         d.month,
-        d.monthshort
+        d.monthshort,
+        EXTRACT(MONTH FROM TO_DATE(d.monthshort, 'Mon')) AS month_number
     FROM date d
 ),
 
@@ -440,6 +443,7 @@ base AS (
         dd.year,
         dd.month,
         dd.monthshort,
+        dd.month_number,
         op.profit
     FROM order_profit op
     JOIN product_hierarchy ph ON op.productkey = ph.productkey
@@ -449,14 +453,14 @@ base AS (
 
 SELECT
     monthshort AS month,
-    SUM(CASE WHEN year = 2016 THEN profit END) AS y2016,
-    SUM(CASE WHEN year = 2017 THEN profit END) AS y2017,
-    SUM(CASE WHEN year = 2018 THEN profit END) AS y2018,
-    SUM(CASE WHEN year = 2019 THEN profit END) AS y2019,
-    SUM(CASE WHEN year = 2020 THEN profit END) AS y2020,
-    SUM(CASE WHEN year = 2021 THEN profit END) AS y2021,
-    SUM(CASE WHEN year = 2022 THEN profit END) AS y2022,
-    SUM(CASE WHEN year = 2023 THEN profit END) AS y2023
+    SUM(CASE WHEN year = 2016 THEN profit END) AS 2016,
+    SUM(CASE WHEN year = 2017 THEN profit END) AS 2017,
+    SUM(CASE WHEN year = 2018 THEN profit END) AS 2018,
+    SUM(CASE WHEN year = 2019 THEN profit END) AS 2019,
+    SUM(CASE WHEN year = 2020 THEN profit END) AS 2020,
+    SUM(CASE WHEN year = 2021 THEN profit END) AS 2021,
+    SUM(CASE WHEN year = 2022 THEN profit END) AS 2022,
+    SUM(CASE WHEN year = 2023 THEN profit END) AS 2023
 FROM base
-GROUP BY month, monthshort
-ORDER BY month;
+GROUP BY monthshort, month_number
+ORDER BY month_number;
