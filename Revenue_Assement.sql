@@ -453,14 +453,14 @@ base AS (
 
 SELECT
     monthshort AS month,
-    SUM(CASE WHEN year = 2016 THEN profit END) AS 2016,
-    SUM(CASE WHEN year = 2017 THEN profit END) AS 2017,
-    SUM(CASE WHEN year = 2018 THEN profit END) AS 2018,
-    SUM(CASE WHEN year = 2019 THEN profit END) AS 2019,
-    SUM(CASE WHEN year = 2020 THEN profit END) AS 2020,
-    SUM(CASE WHEN year = 2021 THEN profit END) AS 2021,
-    SUM(CASE WHEN year = 2022 THEN profit END) AS 2022,
-    SUM(CASE WHEN year = 2023 THEN profit END) AS 2023
+    SUM(CASE WHEN year = 2016 THEN profit END) AS y2016,
+    SUM(CASE WHEN year = 2017 THEN profit END) AS y2017,
+    SUM(CASE WHEN year = 2018 THEN profit END) AS y2018,
+    SUM(CASE WHEN year = 2019 THEN profit END) AS y2019,
+    SUM(CASE WHEN year = 2020 THEN profit END) AS y2020,
+    SUM(CASE WHEN year = 2021 THEN profit END) AS y2021,
+    SUM(CASE WHEN year = 2022 THEN profit END) AS y2022,
+    SUM(CASE WHEN year = 2023 THEN profit END) AS y2023
 FROM base
 GROUP BY monthshort, month_number
 ORDER BY month_number;
