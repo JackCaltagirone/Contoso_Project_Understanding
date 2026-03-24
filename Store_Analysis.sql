@@ -158,5 +158,3 @@ store_details AS (
 SELECT *
 FROM store_details
 ORDER BY total_customers DESC;
-
-
